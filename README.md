@@ -1,73 +1,64 @@
-# Welcome to your Lovable project
+# 💸 PayUPi – Smart Expense Splitter & UPI Tracker for Students
 
-## Project info
+> **PayUPi** is a mobile-first finance app built for Indian college students to track expenses, split costs with friends, and manage repayments — all with UPI-first convenience and fun accountability features.
 
-**URL**: https://lovable.dev/projects/8e01e9bb-a5c4-4d92-8a31-fdbe631488c0
+---
 
-## How can I edit this code?
+## 🧠 Why PayUPi?
 
-There are several ways of editing your application.
+Managing chai breaks, Zomato runs, hostel dues, or group trips shouldn’t be chaotic. PayUPi helps you:
+- Log and auto-fetch expenses from UPI/SMS
+- Split bills with your roommates or friends
+- Set due dates and fines if someone doesn't pay back
+- Categorize spending habits for better budgeting
 
-**Use Lovable**
+---
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/8e01e9bb-a5c4-4d92-8a31-fdbe631488c0) and start prompting.
+## ✨ Features
 
-Changes made via Lovable will be committed automatically to this repo.
+### ✅ Core Functionalities
+- 📥 **Manual + UPI-Based Transaction Entry**
+- 💸 **Friend Group Splitting with Fines**
+- 📊 **Smart Categorization & Budgeting**
+- 👥 **Friend Management & Dues**
+- 🔔 **Reminders & Notifications**
+- 📈 **Monthly Dashboard with Emojis & Charts**
 
-**Use your preferred IDE**
+---
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## 📱 UI/UX Design
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- Android-first design (ideal for Indian smartphones)
+- Dark mode by default
+- Emoji-rich, fun yet minimalistic design
+- Bottom nav bar: Home | Add | Friends | Me
+- Fast, swipeable, and offline-friendly
 
-Follow these steps:
+---
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## ⚙️ Tech Stack
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+- **Frontend:** React / React Native *(Mobile in progress)*
+- **Backend:** Supabase (Auth + DB)
+- **Notifications:** FCM / Local Push
+- **UPI Parsing:** Android SMS Parsing (via Regex)
 
-# Step 3: Install the necessary dependencies.
-npm i
+---
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+## 🧪 Coming Soon
+
+- AI-based categorization
+- Razorpay/UPI payment integration
+- Gamified savings badges
+- PDF report exports
+- WhatsApp reminders
+
+---
+
+## 🚀 How to Run PayUPi Locally
+
+```bash
+git clone https://github.com/your-username/payupi.git
+cd payupi
+npm install
 npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/8e01e9bb-a5c4-4d92-8a31-fdbe631488c0) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
