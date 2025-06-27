@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -105,7 +104,7 @@ const MeSection = () => {
                     <div>
                       <p className="text-sm text-gray-400">{stat.label}</p>
                       <p className={`text-lg font-bold ${stat.color} flex items-center`}>
-                        {typeof stat.value === 'number' && stat.label.includes('Saved' || 'Spent') ? (
+                        {typeof stat.value === 'number' && (stat.label.includes('Saved') || stat.label.includes('Spent')) ? (
                           <>
                             <IndianRupee className="w-4 h-4" />
                             {stat.value.toLocaleString()}
