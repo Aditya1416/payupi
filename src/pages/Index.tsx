@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,6 +8,8 @@ import ExpenseForm from '@/components/ExpenseForm';
 import FloatingAddButton from '@/components/FloatingAddButton';
 import CategoryChart from '@/components/CategoryChart';
 import UncategorizedReview from '@/components/UncategorizedReview';
+import MeSection from '@/components/MeSection';
+import ExpensesSection from '@/components/ExpensesSection';
 
 interface Transaction {
   id: number;
@@ -118,16 +119,36 @@ const Index = () => {
     );
   }
 
-  if (activeTab !== 'home') {
+  if (activeTab === 'expenses') {
+    return (
+      <div className="min-h-screen bg-gray-900 text-white">
+        <div className="container mx-auto px-4 py-6 pb-20">
+          <ExpensesSection transactions={transactions} />
+        </div>
+        <FloatingAddButton onClick={() => setActiveTab('add')} />
+        <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
+      </div>
+    );
+  }
+
+  if (activeTab === 'profile') {
+    return (
+      <div className="min-h-screen bg-gray-900 text-white">
+        <div className="container mx-auto px-4 py-6 pb-20">
+          <MeSection />
+        </div>
+        <FloatingAddButton onClick={() => setActiveTab('add')} />
+        <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
+      </div>
+    );
+  }
+
+  if (activeTab === 'friends') {
     return (
       <div className="min-h-screen bg-gray-900 text-white">
         <div className="container mx-auto px-4 py-6 pb-20">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold">
-              {activeTab === 'expenses' && '📊 Expenses'}
-              {activeTab === 'friends' && '👥 Friends'}
-              {activeTab === 'profile' && '👤 Profile'}
-            </h2>
+            <h2 className="text-2xl font-bold">👥 Friends</h2>
             {(uncategorizedCount > 0 || pendingDuesCount > 0) && (
               <div className="relative">
                 <Bell className="w-6 h-6 text-orange-400" />
@@ -138,43 +159,35 @@ const Index = () => {
             )}
           </div>
           
-          {activeTab === 'friends' && (
-            <div className="space-y-4">
-              {friends.map((friend, index) => (
-                <Card key={index} className="bg-gray-800 border-gray-700">
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-2xl">
-                          {friend.avatar}
-                        </div>
-                        <div>
-                          <h3 className="font-medium text-white">{friend.name}</h3>
-                          <p className="text-sm text-gray-400">Due: {friend.dueDate}</p>
-                          {friend.fineAmount > 0 && (
-                            <p className="text-xs text-red-400">Fine: ₹{friend.fineAmount}</p>
-                          )}
-                        </div>
+          <div className="space-y-4">
+            {friends.map((friend, index) => (
+              <Card key={index} className="bg-gray-800 border-gray-700">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-2xl">
+                        {friend.avatar}
                       </div>
-                      <div className={`font-bold flex items-center ${
-                        friend.owes > 0 ? 'text-green-400' : friend.owes < 0 ? 'text-red-400' : 'text-gray-400'
-                      }`}>
-                        {friend.owes > 0 && '+'}
-                        <IndianRupee className="w-4 h-4" />
-                        {Math.abs(friend.owes)}
+                      <div>
+                        <h3 className="font-medium text-white">{friend.name}</h3>
+                        <p className="text-sm text-gray-400">Due: {friend.dueDate}</p>
+                        {friend.fineAmount > 0 && (
+                          <p className="text-xs text-red-400">Fine: ₹{friend.fineAmount}</p>
+                        )}
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
-          
-          {activeTab !== 'friends' && (
-            <div className="text-center py-20">
-              <p className="text-gray-400">Coming soon in the next update!</p>
-            </div>
-          )}
+                    <div className={`font-bold flex items-center ${
+                      friend.owes > 0 ? 'text-green-400' : friend.owes < 0 ? 'text-red-400' : 'text-gray-400'
+                    }`}>
+                      {friend.owes > 0 && '+'}
+                      <IndianRupee className="w-4 h-4" />
+                      {Math.abs(friend.owes)}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
         <FloatingAddButton onClick={() => setActiveTab('add')} />
         <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
