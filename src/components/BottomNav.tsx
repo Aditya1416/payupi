@@ -1,5 +1,5 @@
 
-import { Home, TrendingDown, Users, User } from 'lucide-react';
+import { Home, TrendingDown, Users, User, Plus } from 'lucide-react';
 
 interface BottomNavProps {
   activeTab: string;
@@ -10,6 +10,7 @@ const BottomNav = ({ activeTab, setActiveTab }: BottomNavProps) => {
   const navItems = [
     { id: 'home', icon: Home, label: 'Home', emoji: '🏠' },
     { id: 'expenses', icon: TrendingDown, label: 'Expenses', emoji: '💸' },
+    { id: 'add', icon: Plus, label: 'Add', emoji: '➕', isSpecial: true },
     { id: 'friends', icon: Users, label: 'Friends', emoji: '👥' },
     { id: 'profile', icon: User, label: 'Me', emoji: '👤' },
   ];
@@ -26,15 +27,19 @@ const BottomNav = ({ activeTab, setActiveTab }: BottomNavProps) => {
               key={item.id}
               onClick={() => setActiveTab(item.id)}
               className={`flex flex-col items-center py-2 px-3 rounded-xl transition-all duration-200 ${
-                isActive 
-                  ? 'bg-emerald-600 text-white transform scale-105' 
-                  : 'text-gray-400 hover:text-white'
+                item.isSpecial
+                  ? 'bg-emerald-600 text-white transform scale-110 -mt-2 shadow-lg'
+                  : isActive 
+                    ? 'bg-emerald-600 text-white transform scale-105' 
+                    : 'text-gray-400 hover:text-white'
               }`}
             >
               <div className="text-lg mb-1">
-                {isActive ? item.emoji : <Icon className="w-5 h-5" />}
+                {isActive || item.isSpecial ? item.emoji : <Icon className="w-5 h-5" />}
               </div>
-              <span className="text-xs">{item.label}</span>
+              <span className={`text-xs ${item.isSpecial ? 'text-emerald-100' : ''}`}>
+                {item.label}
+              </span>
             </button>
           );
         })}

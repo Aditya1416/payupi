@@ -2,14 +2,66 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, TrendingUp, TrendingDown, Users, IndianRupee } from 'lucide-react';
+import { Plus, TrendingUp, TrendingDown, Users, IndianRupee, Bell } from 'lucide-react';
 import BottomNav from '@/components/BottomNav';
 import TransactionCard from '@/components/TransactionCard';
 import ExpenseForm from '@/components/ExpenseForm';
+import FloatingAddButton from '@/components/FloatingAddButton';
+import CategoryChart from '@/components/CategoryChart';
+import UncategorizedReview from '@/components/UncategorizedReview';
+
+interface Transaction {
+  id: number;
+  description: string;
+  amount: number;
+  type: 'expense' | 'income' | 'due' | 'split';
+  category: string;
+  time: string;
+  emoji: string;
+  splitWith?: string[];
+  upiId?: string;
+  merchant?: string;
+  isRecurring?: boolean;
+  dueDate?: string;
+  finePerDay?: number;
+}
 
 const Index = () => {
   const [showExpenseForm, setShowExpenseForm] = useState(false);
   const [activeTab, setActiveTab] = useState('home');
+  const [transactions, setTransactions] = useState<Transaction[]>([
+    {
+      id: 1,
+      description: 'Zomato Food Order',
+      amount: 350,
+      type: 'expense' as const,
+      category: 'Food',
+      time: '2 hours ago',
+      emoji: '🍕',
+      merchant: 'Zomato',
+      upiId: 'zomato@paytm'
+    },
+    {
+      id: 2,
+      description: 'Split Uber Ride',
+      amount: 150,
+      type: 'split' as const,
+      category: 'Transport',
+      time: '5 hours ago',
+      emoji: '🚗',
+      splitWith: ['Rahul', 'Priya'],
+      merchant: 'Uber'
+    },
+    {
+      id: 3,
+      description: 'Pocket Money',
+      amount: 5000,
+      type: 'income' as const,
+      category: 'Family',
+      time: '1 day ago',
+      emoji: '💰'
+    }
+  ]);
 
   // Mock data for demonstration
   const monthlyStats = {
@@ -19,56 +71,112 @@ const Index = () => {
     budget: 10000
   };
 
-  const recentTransactions = [
-    {
-      id: 1,
-      description: 'Zomato Food Order',
-      amount: 350,
-      type: 'expense',
-      category: 'Food',
-      time: '2 hours ago',
-      emoji: '🍕'
+  const friends = [
+    { 
+      name: 'Rahul', 
+      owes: 450, 
+      avatar: '👨‍🎓',
+      dueDate: '2025-01-05',
+      fineAmount: 50
     },
-    {
-      id: 2,
-      description: 'Split Uber Ride',
-      amount: 150,
-      type: 'expense',
-      category: 'Transport',
-      time: '5 hours ago',
-      emoji: '🚗',
-      splitWith: ['Rahul', 'Priya']
+    { 
+      name: 'Priya', 
+      owes: -200, 
+      avatar: '👩‍🎓',
+      dueDate: '2025-01-10',
+      fineAmount: 0
     },
-    {
-      id: 3,
-      description: 'Pocket Money',
-      amount: 5000,
-      type: 'income',
-      category: 'Family',
-      time: '1 day ago',
-      emoji: '💰'
+    { 
+      name: 'Arjun', 
+      owes: 300, 
+      avatar: '👨‍💻',
+      dueDate: '2025-01-15',
+      fineAmount: 25
     }
   ];
 
-  const friends = [
-    { name: 'Rahul', owes: 450, avatar: '👨‍🎓' },
-    { name: 'Priya', owes: -200, avatar: '👩‍🎓' },
-    { name: 'Arjun', owes: 300, avatar: '👨‍💻' }
-  ];
+  const uncategorizedCount = transactions.filter(t => t.category === 'Uncategorized').length;
+  const pendingDuesCount = friends.filter(f => f.owes > 0).length;
+
+  const addTransaction = (newTransaction: Omit<Transaction, 'id'>) => {
+    const transaction: Transaction = {
+      ...newTransaction,
+      id: transactions.length + 1,
+    };
+    setTransactions([transaction, ...transactions]);
+  };
+
+  if (activeTab === 'add') {
+    return (
+      <div className="min-h-screen bg-gray-900 text-white">
+        <ExpenseForm 
+          onClose={() => setActiveTab('home')} 
+          onSave={addTransaction}
+        />
+        <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
+      </div>
+    );
+  }
 
   if (activeTab !== 'home') {
     return (
       <div className="min-h-screen bg-gray-900 text-white">
         <div className="container mx-auto px-4 py-6 pb-20">
-          <div className="text-center py-20">
-            <h2 className="text-2xl font-bold mb-4">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold">
               {activeTab === 'expenses' && '📊 Expenses'}
               {activeTab === 'friends' && '👥 Friends'}
               {activeTab === 'profile' && '👤 Profile'}
             </h2>
-            <p className="text-gray-400">Coming soon in the next update!</p>
+            {(uncategorizedCount > 0 || pendingDuesCount > 0) && (
+              <div className="relative">
+                <Bell className="w-6 h-6 text-orange-400" />
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                  {uncategorizedCount + pendingDuesCount}
+                </span>
+              </div>
+            )}
           </div>
+          
+          {activeTab === 'friends' && (
+            <div className="space-y-4">
+              {friends.map((friend, index) => (
+                <Card key={index} className="bg-gray-800 border-gray-700">
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-2xl">
+                          {friend.avatar}
+                        </div>
+                        <div>
+                          <h3 className="font-medium text-white">{friend.name}</h3>
+                          <p className="text-sm text-gray-400">Due: {friend.dueDate}</p>
+                          {friend.fineAmount > 0 && (
+                            <p className="text-xs text-red-400">Fine: ₹{friend.fineAmount}</p>
+                          )}
+                        </div>
+                      </div>
+                      <div className={`font-bold flex items-center ${
+                        friend.owes > 0 ? 'text-green-400' : friend.owes < 0 ? 'text-red-400' : 'text-gray-400'
+                      }`}>
+                        {friend.owes > 0 && '+'}
+                        <IndianRupee className="w-4 h-4" />
+                        {Math.abs(friend.owes)}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+          
+          {activeTab !== 'friends' && (
+            <div className="text-center py-20">
+              <p className="text-gray-400">Coming soon in the next update!</p>
+            </div>
+          )}
         </div>
+        <FloatingAddButton onClick={() => setActiveTab('add')} />
         <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
       </div>
     );
@@ -83,12 +191,22 @@ const Index = () => {
             <h1 className="text-2xl font-bold">Hey there! 👋</h1>
             <p className="text-emerald-100">Let's track your money</p>
           </div>
-          <Button
-            onClick={() => setShowExpenseForm(true)}
-            className="bg-white text-emerald-600 hover:bg-emerald-50 rounded-full w-12 h-12 p-0"
-          >
-            <Plus className="w-6 h-6" />
-          </Button>
+          <div className="flex items-center gap-3">
+            {(uncategorizedCount > 0 || pendingDuesCount > 0) && (
+              <div className="relative">
+                <Bell className="w-6 h-6 text-white" />
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                  {uncategorizedCount + pendingDuesCount}
+                </span>
+              </div>
+            )}
+            <Button
+              onClick={() => setActiveTab('add')}
+              className="bg-white text-emerald-600 hover:bg-emerald-50 rounded-full w-12 h-12 p-0"
+            >
+              <Plus className="w-6 h-6" />
+            </Button>
+          </div>
         </div>
 
         {/* Monthly Overview */}
@@ -122,6 +240,20 @@ const Index = () => {
       </div>
 
       <div className="container mx-auto px-4 pb-20">
+        {/* Category Chart */}
+        <div className="mb-6">
+          <CategoryChart transactions={transactions} />
+        </div>
+
+        {/* Uncategorized Review */}
+        {uncategorizedCount > 0 && (
+          <div className="mb-6">
+            <UncategorizedReview 
+              transactions={transactions.filter(t => t.category === 'Uncategorized')}
+            />
+          </div>
+        )}
+
         {/* Quick Actions */}
         <div className="mb-6">
           <h2 className="text-lg font-semibold mb-3">Quick Split 🤝</h2>
@@ -149,7 +281,7 @@ const Index = () => {
             </Button>
           </div>
           <div className="space-y-3">
-            {recentTransactions.map((transaction) => (
+            {transactions.slice(0, 5).map((transaction) => (
               <TransactionCard key={transaction.id} transaction={transaction} />
             ))}
           </div>
@@ -182,12 +314,18 @@ const Index = () => {
         </Card>
       </div>
 
+      {/* Floating Add Button */}
+      <FloatingAddButton onClick={() => setActiveTab('add')} />
+
       {/* Bottom Navigation */}
       <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
 
       {/* Expense Form Modal */}
       {showExpenseForm && (
-        <ExpenseForm onClose={() => setShowExpenseForm(false)} />
+        <ExpenseForm 
+          onClose={() => setShowExpenseForm(false)} 
+          onSave={addTransaction}
+        />
       )}
     </div>
   );
